@@ -1,0 +1,34 @@
+
+name: CI-CD Practice
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Run automated tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Package source code
+        run: tar -czf sample-package.tar.gz calculator.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: sample-package
+          path: sample-package.tar.gz
